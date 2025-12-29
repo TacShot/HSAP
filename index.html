@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>InStock - Terminal India</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
+    <style>
+      :root {
+        --terminal-bg: #050505;
+        --terminal-text: #33ff33; /* Phosphor Green */
+        --terminal-dim: #1a5c1a;
+        --terminal-alert: #ff3333;
+        --terminal-warn: #ffcc00;
+        --scan-color: rgba(18, 16, 16, 0.3);
+      }
+      
+      body {
+        font-family: 'VT323', monospace;
+        background-color: var(--terminal-bg);
+        color: var(--terminal-text);
+        overflow: hidden;
+        font-size: 18px;
+        text-shadow: 0 0 2px var(--terminal-dim);
+      }
+
+      /* CRT Scanline Effect */
+      body::before {
+        content: " ";
+        display: block;
+        position: absolute;
+        top: 0; left: 0; bottom: 0; right: 0;
+        background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+        z-index: 100;
+        background-size: 100% 2px, 3px 100%;
+        pointer-events: none;
+      }
+
+      /* Subtle Flicker */
+      @keyframes flicker {
+        0% { opacity: 0.97; }
+        5% { opacity: 0.95; }
+        10% { opacity: 0.9; }
+        15% { opacity: 0.95; }
+        20% { opacity: 0.99; }
+        100% { opacity: 0.95; }
+      }
+      #root {
+        animation: flicker 0.15s infinite;
+        height: 100vh;
+      }
+
+      /* Scrollbar */
+      ::-webkit-scrollbar { width: 12px; }
+      ::-webkit-scrollbar-track { background: #000; border-left: 1px solid var(--terminal-dim); }
+      ::-webkit-scrollbar-thumb { background: var(--terminal-dim); }
+      ::-webkit-scrollbar-thumb:hover { background: var(--terminal-text); }
+
+      .terminal-border {
+        border: 1px solid var(--terminal-dim);
+      }
+      
+      .terminal-cursor::after {
+        content: '█';
+        animation: blink 1s step-end infinite;
+        color: var(--terminal-text);
+        margin-left: 2px;
+      }
+      @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+
+      /* Replaces Tailwind colors with CSS vars for consistency */
+      .text-green-500, .text-green-400 { color: var(--terminal-text) !important; }
+      .bg-green-500 { background-color: var(--terminal-text) !important; }
+      .border-green-500 { border-color: var(--terminal-text) !important; }
+      
+      .text-red-500, .text-red-400 { color: var(--terminal-alert) !important; }
+      .bg-red-500 { background-color: var(--terminal-alert) !important; }
+      
+      .text-blue-400, .text-blue-500 { color: #33ccff !important; text-shadow: 0 0 2px #004466; }
+      .bg-blue-900 { background-color: #002233 !important; }
+      
+      .text-gray-300, .text-gray-400, .text-gray-500 { color: #88aa88 !important; }
+      .border-gray-800, .border-gray-600 { border-color: var(--terminal-dim) !important; }
+      
+      .bg-\[\#0c0c0c\], .bg-\[\#1a1a1a\], .bg-\[\#111\] { background-color: #000000 !important; }
+    </style>
+  <script type="importmap">
+{
+  "imports": {
+    "react": "https://esm.sh/react@^19.2.3",
+    "react/": "https://esm.sh/react@^19.2.3/",
+    "recharts": "https://esm.sh/recharts@^3.6.0",
+    "react-dom/": "https://esm.sh/react-dom@^19.2.3/",
+    "@google/genai": "https://esm.sh/@google/genai@^1.34.0"
+  }
+}
+</script>
+</head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/index.tsx"></script>
+  </body>
+</html>

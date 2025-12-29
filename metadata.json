@@ -1,0 +1,5 @@
+{
+  "name": "InStock - Terminal India",
+  "description": "A terminal-styled stock market tracker for Indian NSE & BSE markets featuring real-time simulated data, keyboard controls, and live charting.",
+  "requestFramePermissions": []
+}
