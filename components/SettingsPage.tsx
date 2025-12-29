@@ -28,6 +28,7 @@ export const SettingsPage: React.FC<SettingsPageProps> = ({ auth, userData, onUp
 
   // API Key State
   const [apiKey, setApiKey] = useState(userData.userSettings?.customApiKey || '');
+  const [useCustomKey, setUseCustomKey] = useState(userData.userSettings?.useCustomKey || false);
   const [isKeyVisible, setIsKeyVisible] = useState(false);
 
   // Import State
@@ -42,10 +43,14 @@ export const SettingsPage: React.FC<SettingsPageProps> = ({ auth, userData, onUp
   const handleApiKeySave = () => {
      const updatedData = {
          ...userData,
-         userSettings: { ...userData.userSettings, customApiKey: apiKey }
+         userSettings: { 
+             ...userData.userSettings, 
+             customApiKey: apiKey,
+             useCustomKey: useCustomKey 
+         }
      };
      onUpdateData(updatedData);
-     showStatus("API Key Saved to Secure Vault");
+     showStatus("AI Configuration Saved to Secure Vault");
   };
 
   const handleChangePassword = async (e: React.FormEvent) => {
@@ -261,30 +266,52 @@ export const SettingsPage: React.FC<SettingsPageProps> = ({ auth, userData, onUp
                 {/* API Key Section */}
                 <div className="border border-gray-800 bg-[#0a0a0a] p-6">
                     <h3 className="text-white font-bold mb-4 flex items-center gap-2">
-                        <span className="text-yellow-500">★</span> GEMINI AI CONFIGURATION
+                        <span className="text-yellow-500">★</span> GOOGLE AI STUDIO / GEMINI
                     </h3>
-                    <label className="block text-gray-500 text-sm mb-2">CUSTOM API KEY</label>
-                    <div className="flex gap-2">
-                        <div className="flex-1 relative">
-                            <input 
-                                type={isKeyVisible ? "text" : "password"}
-                                value={apiKey} 
-                                onChange={e => setApiKey(e.target.value)}
-                                placeholder="Enter Google GenAI API Key..."
-                                className="w-full bg-black border border-gray-700 p-2 text-white focus:border-green-500 focus:outline-none"
-                            />
-                            <button 
-                                onClick={() => setIsKeyVisible(!isKeyVisible)}
-                                className="absolute right-2 top-2 text-gray-500 hover:text-white text-xs"
-                            >
-                                {isKeyVisible ? 'HIDE' : 'SHOW'}
-                            </button>
-                        </div>
-                        <button onClick={handleApiKeySave} className="bg-green-900/30 border border-green-700 text-green-400 px-4 hover:bg-green-900/50">SAVE</button>
+                    
+                    <div className="flex items-center justify-between mb-4 bg-gray-900/50 p-2 rounded">
+                        <label className="text-gray-400 text-xs font-bold cursor-pointer" onClick={() => setUseCustomKey(!useCustomKey)}>
+                            USE ALTERNATIVE API KEY
+                        </label>
+                        <button 
+                            onClick={() => setUseCustomKey(!useCustomKey)}
+                            className={`w-10 h-5 rounded-full p-0.5 transition-colors relative ${useCustomKey ? 'bg-green-600' : 'bg-gray-700'}`}
+                        >
+                            <div className={`w-4 h-4 rounded-full bg-white transition-transform ${useCustomKey ? 'translate-x-5' : 'translate-x-0'}`} />
+                        </button>
                     </div>
-                    <p className="text-[10px] text-gray-600 mt-2">
-                        Required for AI Analyst, Screener, and Predictions. Overrides default environment key.
-                    </p>
+
+                    <div className={`transition-opacity duration-300 ${useCustomKey ? 'opacity-100' : 'opacity-40 pointer-events-none'}`}>
+                        <label className="block text-gray-500 text-sm mb-2">CUSTOM API KEY</label>
+                        <div className="flex gap-2">
+                            <div className="flex-1 relative">
+                                <input 
+                                    type={isKeyVisible ? "text" : "password"}
+                                    value={apiKey} 
+                                    onChange={e => setApiKey(e.target.value)}
+                                    placeholder="Enter your Gemini API Key..."
+                                    disabled={!useCustomKey}
+                                    className="w-full bg-black border border-gray-700 p-2 text-white focus:border-green-500 focus:outline-none disabled:bg-gray-900 disabled:border-gray-800 disabled:text-gray-600"
+                                />
+                                <button 
+                                    onClick={() => setIsKeyVisible(!isKeyVisible)}
+                                    className="absolute right-2 top-2 text-gray-500 hover:text-white text-xs"
+                                    disabled={!useCustomKey}
+                                >
+                                    {isKeyVisible ? 'HIDE' : 'SHOW'}
+                                </button>
+                            </div>
+                        </div>
+                        <p className="text-[10px] text-gray-600 mt-2">
+                            Overrides the default system API key. Your key is encrypted locally.
+                        </p>
+                    </div>
+
+                    <div className="mt-4 pt-4 border-t border-gray-800 text-right">
+                         <button onClick={handleApiKeySave} className="bg-green-900/30 border border-green-700 text-green-400 px-4 py-1 hover:bg-green-900/50 font-bold text-sm">
+                             SAVE CONFIGURATION
+                         </button>
+                    </div>
                 </div>
 
                 {/* Password Change */}

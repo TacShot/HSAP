@@ -9,7 +9,7 @@ interface GithubResponse {
   message?: string;
 }
 
-export const verifyToken = async (token: string, username: string): Promise<boolean> => {
+export const getGithubUser = async (token: string): Promise<string | null> => {
   try {
     const response = await fetch(`${GITHUB_API_BASE}/user`, {
       headers: {
@@ -18,9 +18,19 @@ export const verifyToken = async (token: string, username: string): Promise<bool
       },
     });
 
-    if (!response.ok) return false;
+    if (!response.ok) return null;
     const data = await response.json();
-    return data.login.toLowerCase() === username.toLowerCase();
+    return data.login;
+  } catch (error) {
+    console.error('GitHub Profile Fetch Failed:', error);
+    return null;
+  }
+};
+
+export const verifyToken = async (token: string, username: string): Promise<boolean> => {
+  try {
+    const fetchedUser = await getGithubUser(token);
+    return fetchedUser?.toLowerCase() === username.toLowerCase();
   } catch (error) {
     console.error('GitHub Auth Check Failed:', error);
     return false;

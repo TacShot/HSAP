@@ -98,6 +98,7 @@ export interface UserData {
   alerts: AlertConfig[];
   userSettings?: {
     customApiKey?: string;
+    useCustomKey?: boolean;
   };
 }
 

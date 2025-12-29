@@ -57,6 +57,9 @@ const App: React.FC = () => {
   const [validationError, setValidationError] = useState<string | undefined>();
   const [triggeredAlert, setTriggeredAlert] = useState<string | null>(null);
 
+  // Derive the API Key to use (Custom vs Default)
+  const activeApiKey = userSettings?.useCustomKey ? userSettings.customApiKey : undefined;
+
   // Handle Login Logic
   const handleLogin = (newAuth: AuthState, data: UserData | null) => {
     setAuth(newAuth);
@@ -232,7 +235,7 @@ const App: React.FC = () => {
 
     try {
       // Pass custom API key if available
-      const result = await generatePrediction(currentStock, chartData, userSettings?.customApiKey);
+      const result = await generatePrediction(currentStock, chartData, activeApiKey);
       setPrediction(result);
     } catch (e) {
       console.error(e);
@@ -375,7 +378,7 @@ const App: React.FC = () => {
             chartData={chartData}
             timeframe={timeframe}
             isChartLoading={isChartLoading}
-            userSettings={userSettings} // Pass settings for NewsFeed API key
+            userSettings={{...userSettings, customApiKey: activeApiKey}} // Pass active key
           />
         )}
         
@@ -394,7 +397,7 @@ const App: React.FC = () => {
           <AiAnalysisPage 
             pendingAction={pendingAction}
             onActionComplete={() => setPendingAction(null)}
-            apiKey={userSettings?.customApiKey}
+            apiKey={activeApiKey}
           />
         )}
         
@@ -402,7 +405,7 @@ const App: React.FC = () => {
            <OpportunitiesPage 
              pendingAction={pendingAction}
              onActionComplete={() => setPendingAction(null)}
-             apiKey={userSettings?.customApiKey}
+             apiKey={activeApiKey}
            />
         )}
 
@@ -410,7 +413,7 @@ const App: React.FC = () => {
           <ScreenerPage 
             pendingAction={pendingAction}
             onActionComplete={() => setPendingAction(null)}
-            apiKey={userSettings?.customApiKey}
+            apiKey={activeApiKey}
           />
         )}
 
