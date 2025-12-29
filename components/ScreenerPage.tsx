@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { GoogleGenAI, Type } from "@google/genai";
 import { ScreenerResult, PendingAction } from '../types';
@@ -49,7 +50,7 @@ export const ScreenerPage: React.FC<ScreenerPageProps> = ({ pendingAction, onAct
       `;
 
       const response = await ai.models.generateContent({
-        model: 'gemini-2.5-flash-lite-preview-02-05',
+        model: 'gemini-3-flash-preview',
         contents: prompt,
         config: {
             responseMimeType: 'application/json',

@@ -1,4 +1,5 @@
 
+
 export interface Stock {
   symbol: string;
   price: number;
@@ -62,7 +63,7 @@ export interface TerminalLine {
 }
 
 // New Types for Navigation and Pages
-export type Page = 'DASHBOARD' | 'PORTFOLIO' | 'AI_ANALYSIS' | 'OPPORTUNITIES' | 'SCREENER' | 'SETTINGS';
+export type Page = 'DASHBOARD' | 'PORTFOLIO' | 'AI_ANALYSIS' | 'OPPORTUNITIES' | 'SCREENER' | 'BROWSE' | 'SETTINGS';
 
 export interface PortfolioItem {
   symbol: string;
@@ -92,6 +93,22 @@ export interface ScreenerResult {
   matchScore: number; // 0-100
 }
 
+export interface MarketAsset {
+    symbol: string;
+    name: string;
+    price: number;
+    change: number;
+    category: 'STOCK' | 'ETF' | 'MF' | 'F&O';
+    tags: string[];
+    // Specific fields
+    nav?: number; // Mutual Funds
+    expenseRatio?: number; // ETFs/MFs
+    expiry?: string; // F&O
+    strikePrice?: number; // F&O
+    optionType?: 'CE' | 'PE' | 'FUT'; // F&O
+    oi?: number; // Open Interest for F&O
+}
+
 export interface UserData {
   watchlist: string[];
   portfolio: PortfolioItem[];
@@ -116,4 +133,12 @@ export interface AuthState {
 export interface PendingAction {
   type: 'ADD_PORTFOLIO' | 'ANALYZE' | 'CHECK_OPPORTUNITY' | 'FIND_SIMILAR';
   symbol: string;
+}
+
+export type BrowserTab = 'STOCK' | 'ETF' | 'MF' | 'FNO' | 'SEARCH';
+
+export interface MarketBrowserState {
+    activeTab: BrowserTab;
+    assets: MarketAsset[];
+    searchTerm: string;
 }

@@ -1,6 +1,7 @@
+
 import React, { useState, useEffect, useCallback } from 'react';
 import { INITIAL_WATCHLIST, REFRESH_RATE_MS } from './constants';
-import { Stock, ChartPoint, Timeframe, ModalType, AlertConfig, Prediction, Page, PortfolioItem, AuthState, UserData, PendingAction } from './types';
+import { Stock, ChartPoint, Timeframe, ModalType, AlertConfig, Prediction, Page, PortfolioItem, AuthState, UserData, PendingAction, MarketBrowserState } from './types';
 import { fetchStockData, fetchHistoricalData, isValidSymbol } from './services/stockService';
 import { generatePrediction } from './services/predictionService';
 import { saveUserData } from './services/githubService';
@@ -18,8 +19,9 @@ import { AiAnalysisPage } from './components/AiAnalysisPage';
 import { OpportunitiesPage } from './components/OpportunitiesPage';
 import { ScreenerPage } from './components/ScreenerPage';
 import { SettingsPage } from './components/SettingsPage';
+import { MarketBrowserPage } from './components/MarketBrowserPage';
 
-const PAGES: Page[] = ['DASHBOARD', 'PORTFOLIO', 'AI_ANALYSIS', 'OPPORTUNITIES', 'SCREENER', 'SETTINGS'];
+const PAGES: Page[] = ['DASHBOARD', 'PORTFOLIO', 'AI_ANALYSIS', 'OPPORTUNITIES', 'SCREENER', 'BROWSE', 'SETTINGS'];
 
 const App: React.FC = () => {
   // Auth State
@@ -34,6 +36,13 @@ const App: React.FC = () => {
   // Navigation State
   const [activePage, setActivePage] = useState<Page>('DASHBOARD');
   const [pendingAction, setPendingAction] = useState<PendingAction | null>(null);
+
+  // Browser Persistence State
+  const [browserState, setBrowserState] = useState<MarketBrowserState>({
+    activeTab: 'STOCK',
+    assets: [],
+    searchTerm: ''
+  });
 
   // Shared Data State
   const [watchlist, setWatchlist] = useState<string[]>(INITIAL_WATCHLIST);
@@ -192,6 +201,7 @@ const App: React.FC = () => {
     setWatchlist(prev => [...prev, symbol]);
     setModalType('NONE');
     setValidationError(undefined);
+    setActivePage('DASHBOARD');
   };
 
   const handleRemoveStock = () => {
@@ -364,6 +374,7 @@ const App: React.FC = () => {
         <NavButton page="AI_ANALYSIS" label="AI ANALYST" shortcut="3" />
         <NavButton page="OPPORTUNITIES" label="OPPORTUNITIES" shortcut="4" />
         <NavButton page="SCREENER" label="SCREENER" shortcut="5" />
+        <NavButton page="BROWSE" label="BROWSE" shortcut="6" />
         <div className="flex-1"></div>
         <NavButton page="SETTINGS" label="SYSTEM CONFIG" shortcut="0" />
       </div>
@@ -417,6 +428,21 @@ const App: React.FC = () => {
           />
         )}
 
+        {activePage === 'BROWSE' && (
+          <MarketBrowserPage 
+            pendingAction={pendingAction}
+            onActionComplete={() => setPendingAction(null)}
+            browserState={browserState}
+            setBrowserState={setBrowserState}
+            onAddToWatchlist={(symbol) => {
+              if (!watchlist.includes(symbol)) {
+                 setWatchlist(prev => [...prev, symbol]);
+                 showStatus(`ADDED ${symbol} TO WATCHLIST`);
+              }
+            }}
+          />
+        )}
+
         {activePage === 'SETTINGS' && (
             <SettingsPage 
                 auth={auth} 
@@ -430,7 +456,7 @@ const App: React.FC = () => {
       {/* Bottom Status Bar */}
       <div className="h-8 bg-[#1a1a1a] border-t border-gray-800 flex items-center px-4 text-xs text-gray-500 justify-between select-none z-10">
         <div className="flex gap-6">
-          <span><strong className="text-white">Alt+1-5</strong> NAVIGATE</span>
+          <span><strong className="text-white">Alt+1-6</strong> NAVIGATE</span>
           <span><strong className="text-white">[/]</strong> CYCLE PAGE</span>
           {activePage === 'DASHBOARD' ? (
             <>
@@ -484,6 +510,11 @@ const App: React.FC = () => {
       <HelpModal isOpen={helpOpen} onClose={() => setHelpOpen(false)} />
     </div>
   );
+
+  function showStatus(msg: string) {
+     setTriggeredAlert(msg);
+     setTimeout(() => setTriggeredAlert(null), 3000);
+  }
 };
 
 export default App;

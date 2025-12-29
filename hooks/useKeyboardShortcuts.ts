@@ -35,10 +35,10 @@ export const useKeyboardShortcuts = ({
       // Ignore if inside an input, but allow Alt keys for navigation
       if (e.target instanceof HTMLInputElement && !e.altKey) return;
 
-      // Global Navigation (Alt + 1-5)
+      // Global Navigation (Alt + 1-6)
       if (e.altKey) {
         const num = parseInt(e.key);
-        if (!isNaN(num) && num >= 1 && num <= 5) {
+        if (!isNaN(num) && num >= 1 && num <= 6) {
           e.preventDefault();
           onNavigate?.(num - 1); // Convert 1-based key to 0-based index
           return;

@@ -48,7 +48,7 @@ export const generatePrediction = async (stock: Stock, history: ChartPoint[], cu
     `;
 
     const response = await ai.models.generateContent({
-      model: 'gemini-2.5-flash-lite-preview-02-05',
+      model: 'gemini-3-flash-preview',
       contents: prompt,
       config: {
         tools: [{ googleSearch: {} }],

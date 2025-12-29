@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { WatchlistPanel } from './WatchlistPanel';
 import { ChartPanel } from './ChartPanel';
@@ -26,9 +27,9 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({
   const currentStock = stockData[selectedIndex];
 
   return (
-    <div className="flex-1 flex overflow-hidden">
+    <div className="flex-1 flex overflow-hidden w-full h-full">
       {/* Left Panel: Watchlist */}
-      <div className="w-1/3 min-w-[300px] max-w-[400px] h-full">
+      <div className="w-1/3 min-w-[300px] max-w-[400px] h-full flex flex-col">
         <WatchlistPanel 
           stocks={stockData} 
           selectedIndex={selectedIndex} 
@@ -37,9 +38,9 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({
       </div>
 
       {/* Right Panel: Charts & News */}
-      <div className="flex-1 h-full border-l border-gray-800 flex flex-col">
+      <div className="flex-1 h-full border-l border-gray-800 flex flex-col min-w-0">
         {/* Top: Chart (65% height) */}
-        <div className="h-[65%] min-h-0">
+        <div className="h-[65%] min-h-0 min-w-0">
             <ChartPanel 
             stock={currentStock} 
             data={chartData} 
@@ -49,7 +50,7 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({
         </div>
         
         {/* Bottom: News Feed (35% height) */}
-        <div className="flex-1 border-t border-gray-800 min-h-0">
+        <div className="flex-1 border-t border-gray-800 min-h-0 min-w-0">
             {currentStock && (
                 <NewsFeed symbol={currentStock.symbol} apiKey={userSettings?.customApiKey} />
             )}

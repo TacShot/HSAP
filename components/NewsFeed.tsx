@@ -1,3 +1,4 @@
+
 import React, { useEffect, useState } from 'react';
 import { NewsItem } from '../types';
 import { fetchRedditNews } from '../services/newsService';
@@ -16,19 +17,28 @@ export const NewsFeed: React.FC<NewsFeedProps> = ({ symbol, apiKey }) => {
     if (symbol === lastSymbol) return;
     
     let isMounted = true;
+    
     const loadNews = async () => {
       setLoading(true);
-      setNews([]); // Clear previous news immediately
+      setNews([]); // Clear previous news
       
-      // Simulate a small delay for the "searching" effect or network lag
-      await new Promise(r => setTimeout(r, 500));
-      
-      const data = await fetchRedditNews(symbol, apiKey);
-      
-      if (isMounted) {
-        setNews(data);
-        setLoading(false);
-        setLastSymbol(symbol);
+      try {
+        // Debounce slightly to prevent rapid firing on quick arrow key movement
+        await new Promise(r => setTimeout(r, 600));
+        if (!isMounted) return;
+
+        const data = await fetchRedditNews(symbol, apiKey);
+        
+        if (isMounted) {
+            setNews(data);
+        }
+      } catch (e) {
+        console.error("News Load Failed", e);
+      } finally {
+        if (isMounted) {
+            setLoading(false);
+            setLastSymbol(symbol);
+        }
       }
     };
 
@@ -69,7 +79,7 @@ export const NewsFeed: React.FC<NewsFeedProps> = ({ symbol, apiKey }) => {
   };
 
   return (
-    <div className="h-full flex flex-col bg-[#0c0c0c] font-vt323">
+    <div className="h-full flex flex-col bg-[#0c0c0c] font-vt323 min-w-0">
       {/* Header */}
       <div className="px-4 py-1 bg-[#1a1a1a] border-b border-gray-800 flex justify-between items-center text-xs select-none">
         <div className="flex gap-2 items-center">
@@ -113,8 +123,9 @@ export const NewsFeed: React.FC<NewsFeedProps> = ({ symbol, apiKey }) => {
             )})}
           </div>
         ) : (
-          <div className="h-full flex items-center justify-center text-gray-600 text-sm">
-            NO RECENT DISCUSSIONS FOUND
+          <div className="h-full flex flex-col items-center justify-center text-gray-600 text-sm">
+             <div className="mb-1 text-gray-700 font-bold">NO SIGNAL</div>
+             <div className="text-[10px] opacity-70">CHECK API CONFIG OR NETWORK</div>
           </div>
         )}
       </div>

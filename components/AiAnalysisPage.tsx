@@ -1,3 +1,4 @@
+
 import React, { useState, useRef, useEffect } from 'react';
 import { GoogleGenAI } from "@google/genai";
 import { ChatMessage, PendingAction } from '../types';
@@ -28,7 +29,7 @@ export const AiAnalysisPage: React.FC<AiAnalysisPageProps> = ({ pendingAction, o
     }
     return [{ 
       role: 'model', 
-      text: 'Identity Verified. Connected to Gemini-2.5-Flash-Lite.\nHow can I assist with your market analysis today?', 
+      text: 'Identity Verified. Connected to Gemini-3-Flash.\nHow can I assist with your market analysis today?', 
       timestamp: new Date() 
     }];
   });
@@ -60,7 +61,7 @@ export const AiAnalysisPage: React.FC<AiAnalysisPageProps> = ({ pendingAction, o
   const handleClearHistory = () => {
     const defaultMsg: ChatMessage = { 
       role: 'model', 
-      text: 'Identity Verified. Connected to Gemini-2.5-Flash-Lite.\nHow can I assist with your market analysis today?', 
+      text: 'Identity Verified. Connected to Gemini-3-Flash.\nHow can I assist with your market analysis today?', 
       timestamp: new Date() 
     };
     setMessages([defaultMsg]);
@@ -90,7 +91,7 @@ export const AiAnalysisPage: React.FC<AiAnalysisPageProps> = ({ pendingAction, o
       `;
 
       const response = await ai.models.generateContent({
-        model: 'gemini-2.5-flash-lite-preview-02-05',
+        model: 'gemini-3-flash-preview',
         contents: prompt,
       });
 

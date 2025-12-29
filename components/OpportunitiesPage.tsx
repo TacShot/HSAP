@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { GoogleGenAI, Type } from "@google/genai";
 import { Opportunity, PendingAction } from '../types';
@@ -36,7 +37,7 @@ export const OpportunitiesPage: React.FC<OpportunitiesPageProps> = ({ pendingAct
       `;
 
       const response = await ai.models.generateContent({
-        model: 'gemini-2.5-flash-lite-preview-02-05',
+        model: 'gemini-3-flash-preview',
         contents: prompt,
         config: {
             responseMimeType: 'application/json',
@@ -83,7 +84,7 @@ export const OpportunitiesPage: React.FC<OpportunitiesPageProps> = ({ pendingAct
       `;
 
       const response = await ai.models.generateContent({
-        model: 'gemini-2.5-flash-lite-preview-02-05',
+        model: 'gemini-3-flash-preview',
         contents: prompt,
         config: {
             responseMimeType: 'application/json',

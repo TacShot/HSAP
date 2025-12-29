@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { getGithubUser, fetchUserData, createRepository } from '../services/githubService';
 import { deriveKey, decryptData, encryptData } from '../services/cryptoService';
@@ -85,7 +84,20 @@ export const LoginPage: React.FC<LoginPageProps> = ({ onLogin }) => {
         }
       }
 
-      const finalData = data ? injectApiKey(data) : null;
+      // 3. Prepare Initial Data
+      // If data is null (new repo or empty file), initialize defaults
+      let finalData = data;
+      if (!finalData) {
+          finalData = {
+              watchlist: INITIAL_WATCHLIST,
+              portfolio: [],
+              alerts: [],
+              userSettings: {}
+          };
+      }
+
+      // Inject API Key if provided
+      finalData = injectApiKey(finalData);
       
       setStatus('ACCESS_GRANTED');
       
